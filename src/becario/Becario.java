@@ -1,6 +1,9 @@
 package becario;
 
-/*TAREAS A REALIZAR
+
+//NOTAS
+/*
+TAREAS A REALIZAR
 ----------------------------------------------------
 + Peinar la base de datos (sin repeticiones, restricciones, mayúsculas, etc).
 + Establecer relaciones en la base de datos.
@@ -8,14 +11,16 @@ package becario;
 + Populate database.
 + Insertar registros.
 + Suprimir registros.
- */
++ Copiar estructura de la base de datos SRBDi y adaptar el programa.
+ 
 
- /*BUGS DETECTADOS
+BUGS DETECTADOS
 ----------------------------------------------------
 + Los valores de Tdes y Pdes no se pasan bien como Float, hay algún problema en la conversión a String.
 + Desde general sólo se asocia a líneas, no a equipos. Fácil de corregir, necesitaré un booleano en el formulario para poder diferenciar ambas listas.
-+ El ComboBox de la línea no se actualiza
  */
+
+
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,39 +33,62 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-public class Becario {
-    static String ruta;
 
+public class Becario {
+    
+
+    static String ruta="";
+    static String  rutaPC = "jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
+    static String  rutaMAC= "jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb";
+    static GestorDeVentanas gestorDeVentanas;
+
+
+    
+    
+    
     public static void main(String[] args) {
         // TODO code application logic here
         
+        ruta=desdeDondeTrabajo();
+        
+        gestorDeVentanas.abreLaVentana("PRINCIPAL");
+
+    }
+
+    
+    
+    public  static String desdeDondeTrabajo(){
+
         String[] options = {"Desde el curro", "Desde el Mac"};
         
        int x = JOptionPane.showOptionDialog(null, "Desde donde estas trabajando?",
                 "Elige",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
         if (x==0){
             
-        ruta="jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
+        return rutaPC;
         }else if(x==1){
             
-        ruta="jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb";
+        return rutaMAC;
         }
-        Ventana_linea ventana_linea = new Ventana_linea();
-        Ventana_general ventana_general = new Ventana_general();
-        Ventana_equipo ventana_equipo = new Ventana_equipo();
-        ventana_linea.setVisible(true);
-        ventana_general.setVisible(true);
-        ventana_equipo.setVisible(true);
+        return null;
     }
-
+  
+    
+   
+        
+        
+    
+    //CONSULTAS
+    
     public ResultSet consultameEsto(String consulta) {
 
         try {
-            Connection conn = DriverManager.getConnection(ruta);
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(consulta);
-            conn.close();
+            ResultSet rs;
+            try (Connection conn = DriverManager.getConnection(ruta)) {
+                Statement st = conn.createStatement();
+                rs = st.executeQuery(consulta);
+            }
             return rs;
         } catch (SQLException sqlEx) {
             System.out.println(sqlEx.getMessage());
@@ -82,6 +110,47 @@ public class Becario {
 
     }
 
+    //Añade a una lista ofrecida como parámetro un campo concreto de los resultados de una consulta
+    public void listameEsto(String campo, String consulta, JList lista) {
+
+        lista.removeAll();
+        DefaultListModel listModel = new DefaultListModel();
+        ResultSet rs = consultameEsto(consulta);
+        try {
+            listModel.clear();
+            while (rs.next()) {
+
+                listModel.addElement(rs.getString(campo));
+            }
+            lista.setModel(listModel);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    //Añade a una lista desplegable ofrecida como parámetro un campo concreto de los resultados de una consulta
+    public void listameEsto(String campo, String consulta, JComboBox combo) {
+
+        combo.removeAllItems();
+        ResultSet rs = consultameEsto(consulta);
+        try {
+            while (rs.next()) {
+
+                combo.addItem(rs.getString(campo));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    
+    
+    
+    //LECTURAS DE LA BASE DE DATOS
+    
     public void leeLaLinea(Line line, JList lista) {
         try {
             Connection conn = DriverManager.getConnection(ruta);
@@ -239,6 +308,11 @@ public class Becario {
 
     }
 
+    
+    
+    
+    //UPDATES A LOS REGISTROS
+    
     public void modificaLaLinea(Line linea) {
         Connection conn;
         try {
@@ -403,40 +477,7 @@ public class Becario {
 
     }
 
-    //Añade a una lista ofrecida como parámetro un campo concreto de los resultados de una consulta
-    public void listameEsto(String campo, String consulta, JList lista) {
 
-        lista.removeAll();
-        DefaultListModel listModel = new DefaultListModel();
-        ResultSet rs = consultameEsto(consulta);
-        try {
-            listModel.clear();
-            while (rs.next()) {
-
-                listModel.addElement(rs.getString(campo));
-            }
-            lista.setModel(listModel);
-        } catch (SQLException ex) {
-            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void listameEsto(String campo, String consulta, JComboBox combo) {
-
-        combo.removeAllItems();
-        ResultSet rs = consultameEsto(consulta);
-        try {
-            while (rs.next()) {
-
-                combo.addItem(rs.getString(campo));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
 
 }
 
