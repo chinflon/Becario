@@ -29,13 +29,24 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 public class Becario {
+    static String ruta;
 
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        String[] options = {"Desde el curro", "Desde el Mac"};
+        
+       int x = JOptionPane.showOptionDialog(null, "Desde donde estas trabajando?",
+                "Elige",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        if (x==0){
+        ruta="jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
+        }else if(x==1){
+        ruta="jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb";
+        }
         Ventana_linea ventana_linea = new Ventana_linea();
         Ventana_general ventana_general = new Ventana_general();
         Ventana_equipo ventana_equipo = new Ventana_equipo();
-
         ventana_linea.setVisible(true);
         ventana_general.setVisible(true);
         ventana_equipo.setVisible(true);
@@ -44,8 +55,7 @@ public class Becario {
     public ResultSet consultameEsto(String consulta) {
 
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(consulta);
             conn.close();
@@ -59,8 +69,7 @@ public class Becario {
     public void ejecutameEsto(String query) {
         Connection conn;
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+             conn = DriverManager.getConnection(ruta);
             
             Statement st = conn.createStatement();
             st.execute(query);
@@ -73,8 +82,7 @@ public class Becario {
 
     public void leeLaLinea(Line line, JList lista) {
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Lines WHERE Line = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -105,8 +113,7 @@ public class Becario {
 
     public void leeElEquipo(Equipment equipment, JList lista) {
         try {
-             //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+             Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Equipment WHERE Tag = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -136,8 +143,7 @@ public class Becario {
 
     public void leeLosRangos(Ranges rangos, JList lista) {
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Ranges WHERE Tag = '" + lista.getSelectedValue() + "'");
             if (!rs.next() && lista.getSelectedValue() != null) {
@@ -176,8 +182,7 @@ public class Becario {
 
     public void leeElItem(General item, JList lista) {
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM General WHERE Tag = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -203,8 +208,7 @@ public class Becario {
 
     public void leeElProceso(Process proceso, JList lista) {
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Process WHERE Tag = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -236,8 +240,7 @@ public class Becario {
     public void modificaLaLinea(Line linea) {
         Connection conn;
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-             conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+             conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -280,8 +283,7 @@ public class Becario {
         Connection conn;
         try {
             
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-             conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+             conn = DriverManager.getConnection(ruta);
              String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -312,8 +314,7 @@ public class Becario {
         Connection conn;
         try {
             
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-             conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+             conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -339,8 +340,7 @@ public class Becario {
     public void modificaElProceso(Process proceso) {
         Connection conn;
         try {
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-             conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+             conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -372,8 +372,7 @@ public class Becario {
         Connection conn;
         try {
             
-            //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-             conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
+            conn = DriverManager.getConnection(ruta);
              String query;
             Statement st = conn.createStatement();
 
