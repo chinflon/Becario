@@ -24,7 +24,6 @@ public class Ventana_general extends javax.swing.JFrame {
         this.Text_Notes.setText(item.getNotes());
                 
         query = "SELECT * FROM Lines";
-        //this.ComboBox_Lines.removeAll();
         becario.listameEsto("Line", query, this.ComboBox_Lines);
         this.ComboBox_Lines.setSelectedItem(item.getLine());
               

@@ -40,8 +40,10 @@ public class Becario {
                 "Elige",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (x==0){
+            
         ruta="jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
         }else if(x==1){
+            
         ruta="jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb";
         }
         Ventana_linea ventana_linea = new Ventana_linea();
