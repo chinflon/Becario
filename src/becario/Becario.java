@@ -339,7 +339,6 @@ public class Becario {
     public void modificaElProceso(Process proceso) {
         Connection conn;
         try {
-            
             //Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
              conn = DriverManager.getConnection("jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb");
             String query;
