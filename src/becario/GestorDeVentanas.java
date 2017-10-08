@@ -3,62 +3,57 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package becario;
+/*package becario;
 
-/**
- *
- * @author chinflon
- */
+
 public class GestorDeVentanas {
-    
+     
 
-    
-     Ventana_linea ventana_linea = new Ventana_linea();
-     Ventana_general ventana_general = new Ventana_general();
-     Ventana_equipo ventana_equipo = new Ventana_equipo();
-     Ventana_principal ventana_principal = new Ventana_principal();
-    
+     
+
      
          //FUNCIONES DE VISTA
     
-    public  void abreLaVentana(String origen, String destino){
+    public  void abreLaVentana(int origen, int destino){
     
          cierraLaVentana(origen);
-         
+
          switch (destino) {
            
-                     case "GENERAL":
+                     case 1:
                         ventana_general.setVisible(true);
                      break;
-                     case "LINEA":
+                     case 2:
                         ventana_linea.setVisible(true);
                      break;
-                     case "EQUIPO":
+                     case 3:
                         ventana_equipo.setVisible(true);
                      break;
-                     case "PRINCIPAL":
+                     case 0:
                         ventana_principal.setVisible(true);
                      break;
 
+         
          }
-    } 
+    }
     
-    public  void abreLaVentana(String destino){
+    
+    public  void abreLaVentana(int destino){
       System.out.println("Entra");
       System.out.println(destino);
- 
+      try{
       switch (destino) {
            
-                     case "GENERAL":
+                     case 0:
                         ventana_general.setVisible(true);
                      break;
-                     case "LINEA":
+                     case 1:
                         ventana_linea.setVisible(true);
                      break;
-                     case "EQUIPO":
+                     case 2:
                         ventana_equipo.setVisible(true);
                      break;
-                     case "PRINCIPAL":
+                     case 3:
                          System.out.println("Vuelve a entrar");
                         ventana_principal.setVisible(true);
                      break;
@@ -66,25 +61,32 @@ public class GestorDeVentanas {
                          System.out.println("Hay algun problema al abrir la ventana principal");
 
          }
+      }catch (Exception Ex) {
+            System.out.println("Ha saltado una excepcion: "+Ex.getMessage());
+        }
+      }
+ 
       
-    } 
-
-    public  void cierraLaVentana(String ventana){
     
+
+    public  void cierraLaVentana(int ventana){
+
          switch (ventana) {
            
-                     case "GENERAL":
+                     case 0:
                         ventana_general.setVisible(false);
                      break;
-                     case "LINEA":
+                     case 1:
                         ventana_linea.setVisible(false);
                      break;
-                     case "RANGOS":
+                     case 2:
                         ventana_general.setVisible(false);
                      break;
-                     case "PROCESO":
+                     case 3:
                         ventana_general.setVisible(false);
                      break;
          }
     }
+    
 }
+*/

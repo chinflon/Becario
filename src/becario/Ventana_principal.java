@@ -5,7 +5,7 @@ package becario;
 public class Ventana_principal extends javax.swing.JFrame {
 
 Becario becario=new Becario();
-GestorDeVentanas gestorDeVentanas = new GestorDeVentanas();
+//GestorDeVentanas gestorDeVentanas = new GestorDeVentanas();
 
 
     public Ventana_principal() {
@@ -73,15 +73,15 @@ GestorDeVentanas gestorDeVentanas = new GestorDeVentanas();
     }// </editor-fold>//GEN-END:initComponents
 
     private void Button_InstrumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_InstrumentActionPerformed
-        gestorDeVentanas.abreLaVentana("GENERAL");
+        //gestorDeVentanas.abreLaVentana(0);
     }//GEN-LAST:event_Button_InstrumentActionPerformed
 
     private void Button_LineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_LineActionPerformed
-        gestorDeVentanas.abreLaVentana("LINEA");
+        //gestorDeVentanas.abreLaVentana(1);
     }//GEN-LAST:event_Button_LineActionPerformed
 
     private void Button_EquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_EquipmentActionPerformed
-        gestorDeVentanas.abreLaVentana("EQUPO");
+        //gestorDeVentanas.abreLaVentana(2);
     }//GEN-LAST:event_Button_EquipmentActionPerformed
 
     /**
