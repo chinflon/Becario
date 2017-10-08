@@ -40,18 +40,21 @@ public class Becario {
     static String ruta="";
     static String  rutaPC = "jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
     static String  rutaMAC= "jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb";
-    static GestorDeVentanas gestorDeVentanas;
-
+     
+    
+     public static Ventana_linea ventana_linea = new Ventana_linea();
+     public static Ventana_general ventana_general = new Ventana_general();
+     public static Ventana_equipo ventana_equipo = new Ventana_equipo();
+     public static Ventana_principal ventana_principal = new Ventana_principal();
 
     
     
     
     public static void main(String[] args) {
         // TODO code application logic here
-        
-        ruta=desdeDondeTrabajo();
-        
-        gestorDeVentanas.abreLaVentana("PRINCIPAL");
+
+
+ventana_principal.setVisible(true);
 
     }
 
