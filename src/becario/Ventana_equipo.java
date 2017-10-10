@@ -15,6 +15,7 @@ public class Ventana_equipo extends javax.swing.JFrame {
 
     Becario becario = new Becario();
     Equipment equipment = new Equipment();
+    int i;
 
     public Ventana_equipo() {
         initComponents();
@@ -266,11 +267,12 @@ public class Ventana_equipo extends javax.swing.JFrame {
             campos_a_equipo();
             becario.modificaElEquipo(equipment);
             becario.listameEsto("Tag", "SELECT * FROM Equipment", this.List_Equipment);
+            this.List_Equipment.setSelectedIndex(i);
         }
     }//GEN-LAST:event_Button_modifyActionPerformed
 
     private void List_EquipmentValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_List_EquipmentValueChanged
-
+        i = this.List_Equipment.getSelectedIndex();
         becario.leeElEquipo(equipment, this.List_Equipment);
         equipo_a_campos();
         this.Button_modify.setEnabled(true);

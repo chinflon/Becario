@@ -1,6 +1,8 @@
 package becario;
 
-/*TAREAS A REALIZAR
+//NOTAS
+/*
+TAREAS A REALIZAR
 ----------------------------------------------------
 + Peinar la base de datos (sin repeticiones, restricciones, mayúsculas, etc).
 + Establecer relaciones en la base de datos.
@@ -8,13 +10,13 @@ package becario;
 + Populate database.
 + Insertar registros.
 + Suprimir registros.
- */
++ Copiar estructura de la base de datos SRBDi y adaptar el programa.
+ 
 
- /*BUGS DETECTADOS
+BUGS DETECTADOS
 ----------------------------------------------------
 + Los valores de Tdes y Pdes no se pasan bien como Float, hay algún problema en la conversión a String.
 + Desde general sólo se asocia a líneas, no a equipos. Fácil de corregir, necesitaré un booleano en el formulario para poder diferenciar ambas listas.
-+ El ComboBox de la línea no se actualiza
  */
 import java.sql.Statement;
 import java.sql.Connection;
@@ -30,27 +32,117 @@ import javax.swing.JOptionPane;
 
 public class Becario {
 
-    public static void main(String[] args) {
-        // TODO code application logic here
-        Ventana_linea ventana_linea = new Ventana_linea();
-        Ventana_general ventana_general = new Ventana_general();
-        Ventana_equipo ventana_equipo = new Ventana_equipo();
+    static String ruta = "jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
+    static String rutaPC = "jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb";
+    static String rutaMAC = "jdbc:ucanaccess:///Mis Cosas/Becario/Becario/BDprueba.accdb";
+    
+    static GestorDeVentanas gestorDeVentanas=new GestorDeVentanas();
 
-        //ventana_linea.setVisible(true);
-        ventana_general.setVisible(true);
-        //ventana_equipo.setVisible(true);
+
+    public static void main(String[] args) {
+        //abreLaVentana(3);
+
+        ruta = desdeDondeTrabajo();
+        gestorDeVentanas.abreLaVentana(0);
+
     }
 
+    public static String desdeDondeTrabajo() {
+
+        String[] options = {"Desde el curro", "Desde el Mac"};
+
+        int x = JOptionPane.showOptionDialog(null, "Desde donde estas trabajando?",
+                "Elige",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+        if (x == 0) {
+
+            return rutaPC;
+        } else if (x == 1) {
+
+            return rutaMAC;
+        }
+        return null;
+    }
+
+    /* public  void abreLaVentana(int origen, int destino){
+    
+         cierraLaVentana(origen);
+
+         switch (destino) {
+           
+                     case 1:
+                        ventana_general.setVisible(true);
+                     break;
+                     case 2:
+                        ventana_linea.setVisible(true);
+                     break;
+                     case 3:
+                        ventana_equipo.setVisible(true);
+                     break;
+                     case 0:
+                        ventana_principal.setVisible(true);
+                     break;
+
+         
+         }
+    }*/
+ /* public static void abreLaVentana(int destino){
+      System.out.println("Entra");
+      System.out.println(destino);
+      try{
+      switch (destino) {
+           
+                     case 0:
+                        ventana_general.setVisible(true);
+                     break;
+                     case 1:
+                        ventana_linea.setVisible(true);
+                     break;
+                     case 2:
+                        ventana_equipo.setVisible(true);
+                     break;
+                     case 3:
+                         System.out.println("Vuelve a entrar");
+                        ventana_principal.setVisible(true);
+                     break;
+                     default:
+                         System.out.println("Hay algun problema al abrir la ventana principal");
+
+         }
+      }catch (Exception Ex) {
+            System.out.println("Ha saltado una excepcion: "+Ex.getMessage());
+        }
+      }*/
+ /* public  void cierraLaVentana(int ventana){
+
+         switch (ventana) {
+           
+                     case 0:
+                        ventana_general.setVisible(false);
+                     break;
+                     case 1:
+                        ventana_linea.setVisible(false);
+                     break;
+                     case 2:
+                        ventana_general.setVisible(false);
+                     break;
+                     case 3:
+                        ventana_general.setVisible(false);
+                     break;
+         }
+    }*/
+    //CONSULTAS
     public ResultSet consultameEsto(String consulta) {
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(consulta);
-            conn.close();
+            ResultSet rs;
+            try (Connection conn = DriverManager.getConnection(ruta)) {
+                Statement st = conn.createStatement();
+                rs = st.executeQuery(consulta);
+            }
             return rs;
         } catch (SQLException sqlEx) {
-            System.out.println(sqlEx.getMessage());
+            System.out.println("Se ha lanzado una excepción: "+sqlEx.getMessage());
         }
         return null;
     }
@@ -58,7 +150,8 @@ public class Becario {
     public void ejecutameEsto(String query) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            conn = DriverManager.getConnection(ruta);
+
             Statement st = conn.createStatement();
             st.execute(query);
             conn.close();
@@ -68,9 +161,46 @@ public class Becario {
 
     }
 
+    //Añade a una lista ofrecida como parámetro un campo concreto de los resultados de una consulta
+    public void listameEsto(String campo, String consulta, JList lista) {
+
+        lista.removeAll();
+        DefaultListModel listModel = new DefaultListModel();
+        ResultSet rs = consultameEsto(consulta);
+        try {
+            listModel.clear();
+            while (rs.next()) {
+
+                listModel.addElement(rs.getString(campo));
+            }
+            lista.setModel(listModel);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    //Añade a una lista desplegable ofrecida como parámetro un campo concreto de los resultados de una consulta
+    public void listameEsto(String campo, String consulta, JComboBox combo) {
+
+        combo.removeAllItems();
+        ResultSet rs = consultameEsto(consulta);
+        try {
+            while (rs.next()) {
+
+                combo.addItem(rs.getString(campo));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    //LECTURAS DE LA BASE DE DATOS
     public void leeLaLinea(Line line, JList lista) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Lines WHERE Line = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -101,7 +231,7 @@ public class Becario {
 
     public void leeElEquipo(Equipment equipment, JList lista) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Equipment WHERE Tag = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -131,7 +261,7 @@ public class Becario {
 
     public void leeLosRangos(Ranges rangos, JList lista) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Ranges WHERE Tag = '" + lista.getSelectedValue() + "'");
             if (!rs.next() && lista.getSelectedValue() != null) {
@@ -170,7 +300,7 @@ public class Becario {
 
     public void leeElItem(General item, JList lista) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM General WHERE Tag = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -196,7 +326,7 @@ public class Becario {
 
     public void leeElProceso(Process proceso, JList lista) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            Connection conn = DriverManager.getConnection(ruta);
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Process WHERE Tag = '" + lista.getSelectedValue() + "'");
             conn.close();
@@ -225,10 +355,11 @@ public class Becario {
 
     }
 
+    //UPDATES A LOS REGISTROS
     public void modificaLaLinea(Line linea) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -270,7 +401,8 @@ public class Becario {
     public void modificaElEquipo(Equipment equipo) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+
+            conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -300,7 +432,8 @@ public class Becario {
     public void modificaElItem(General item) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+
+            conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -326,7 +459,7 @@ public class Becario {
     public void modificaElProceso(Process proceso) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+            conn = DriverManager.getConnection(ruta);
             String query;
 
             //Primero se actualizan en el registro todos los campos de la línea salvo el nombre.
@@ -357,7 +490,8 @@ public class Becario {
     public void modificaLosRangos(Ranges rangos) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\0204687\\Desktop\\Software developers\\CADENAS\\BDprueba.accdb");
+
+            conn = DriverManager.getConnection(ruta);
             String query;
             Statement st = conn.createStatement();
 
@@ -386,39 +520,4 @@ public class Becario {
 
     }
 
-    //Añade a una lista ofrecida como parámetro un campo concreto de los resultados de una consulta
-    public void listameEsto(String campo, String consulta, JList lista) {
-
-        lista.removeAll();
-        DefaultListModel listModel = new DefaultListModel();
-        ResultSet rs = consultameEsto(consulta);
-        try {
-            listModel.clear();
-            while (rs.next()) {
-
-                listModel.addElement(rs.getString(campo));
-            }
-            lista.setModel(listModel);
-        } catch (SQLException ex) {
-            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void listameEsto(String campo, String consulta, JComboBox combo) {
-
-        combo.removeAll();
-        ResultSet rs = consultameEsto(consulta);
-        try {
-            while (rs.next()) {
-
-                combo.addItem(rs.getString(campo));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Ventana_linea.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
 }
-
